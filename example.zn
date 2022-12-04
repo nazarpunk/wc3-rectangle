@@ -1,0 +1,29 @@
+real x = GetSpellTargetX();
+real y = GetSpellTargetY();
+real a = GetUnitFacing(GetTriggerUnit()) * bj_DEGTORAD;
+real g = CreateGroup();
+real ux, uy;
+
+Rectangle rect = new Rectangle(x, y, 100, 300, a);
+
+GroupEnumUnitsInRange(g, x, y, 500, Filter(function() -> boolean {
+    return UnitAlive(GetFilterUnit());
+}));
+
+while(true) {
+    u = FirstOfGroup(g);
+    if (u == null) {
+        break;
+    }
+    ux = GetUnitX(u);
+    uy = GetUnitY(u);
+
+    if (IsUnitInRangeXY(u, ux, uy + rect.distanceToPoint(ux, uy))) {
+        // do some one
+    }
+
+    GroupRemoveUnit(g, u);
+}
+
+
+DestroyGroup(g); g = null;
