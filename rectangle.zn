@@ -63,7 +63,7 @@
                 this.blY = this.cY + d * Sin(ar);
             }
     
-            distanceToPoint(real x, real y) {
+            distanceToPoint(real x, real y) -> real {
                 real a = normalize(0 - this.angle);
                 real cos = Cos(a);
                 real sin = Sin(a);
@@ -81,7 +81,7 @@
                 dx = RMaxBJ(0, RMaxBJ(this.cX - hh - x, x - (this.cX + hh)));
                 dy = RMaxBJ(0, RMaxBJ(this.cY - hw - y, y - (this.cY + hw)));
     
-                return SquareRoot(dx * dx + dy * dy);
+                return dx * dx + dy * dy;
             }
         }
     }
