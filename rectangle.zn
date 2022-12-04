@@ -1,0 +1,89 @@
+//! zinc
+    library Rectangle {
+
+        function normalize (real r) -> real {
+            return r - 2 * bj_PI * R2I(r / (bj_PI * 2));
+        };
+
+        public struct Rectangle {
+            real tlX = 0;
+            real tlY = 0;
+            real trX = 0;
+            real trY = 0;
+            real blX = 0;
+            real blY = 0;
+            real brX = 0;
+            real brY = 0;
+    
+            real cX = 0;
+            real cY = 0;
+    
+            real angle = 0;
+    
+            real width = 0;
+            real height = 0;
+    
+            static method create(real cX, real cY, real width, real height, real angle) -> Rectangle {
+                Rectangle this = Rectangle.allocate();
+                this.cX = cX;
+                this.cY = cY;
+                this.width = width;
+                this.height = height;
+                this.angle = angle;
+                this.setAngle(angle);
+            }
+
+            method destroy() {
+                this.deallocate();
+            }
+    
+            method setAngle(real angle) {
+                real d = SquareRoot(this.width * this.width + this.height * this.height) * .5;
+                real wa = (bj_PI - Atan(this.height / this.width) * 2) * .5;
+                real ar;
+
+                this.angle = normalize(angle);
+    
+                ar = normalize(angle - wa);
+                this.tlX = this.cX + d * Cos(ar);
+                this.tlY = this.cY + d * Sin(ar);
+    
+                ar = normalize(angle + wa);
+                this.trX = this.cX + d * Cos(ar);
+                this.trY = this.cY + d * Sin(ar);
+    
+                angle = angle + Math.PI;
+    
+                ar = normalize(angle - wa);
+                this.brX = this.cX + d * Cos(ar);
+                this.brY = this.cY + d * Sin(ar);
+    
+                ar = normalize(angle + wa);
+                this.blX = this.cX + d * Cos(ar);
+                this.blY = this.cY + d * Sin(ar);
+            }
+    
+            distanceToPoint(real x, real y) {
+                real a = normalize(0 - this.angle);
+                real cos = Cos(a);
+                real sin = Sin(a);
+                real xn, yn, dx , dy ;
+                real hh = this.height * .5;
+                real hw = this.width * .5;
+
+                x = x - this.cX;
+                y = y - this.cY;
+                xn = x * cos - y * sin;
+                yn = x * sin + y * cos;
+                x = xn + this.cX;
+                y = yn + this.cY;
+
+                dx = RMaxBJ(0, RMaxBJ(this.cX - hh - x, x - (this.cX + hh)));
+                dy = RMaxBJ(0, RMaxBJ(this.cY - hw - y, y - (this.cY + hw)));
+    
+                return SquareRoot(dx * dx + dy * dy);
+            }
+        }
+    }
+
+//! endzinc

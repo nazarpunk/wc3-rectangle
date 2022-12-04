@@ -67,8 +67,8 @@ export class Rectangle {
 		const hh = this.height * .5;
 		const hw = this.width * .5;
 
-		const dx = Math.max(this.cX - hh - x, 0, x - (this.cX + hh));
-		const dy = Math.max(this.cY - hw - y, 0, y - (this.cY + hw));
+		const dx = Math.max(0, this.cX - hh - x, x - (this.cX + hh));
+		const dy = Math.max(0, this.cY - hw - y, y - (this.cY + hw));
 
 		return Math.sqrt(dx * dx + dy * dy);
 	}
