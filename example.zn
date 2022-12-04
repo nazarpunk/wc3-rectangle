@@ -25,5 +25,6 @@ while(true) {
     GroupRemoveUnit(g, u);
 }
 
+rect.destroy();
 
 DestroyGroup(g); g = null;
