@@ -38,7 +38,7 @@
                 if (cy != null) {
                     this.cy = cy;
                 }
-                return this -> setRadians(null);
+                return this.setRadians(null);
             }
 
             // Устанавливает размер прямоугольника
@@ -49,7 +49,7 @@
                 if (height != null) {
                     this.height = height;
                 }
-                return this -> setRadians(null);
+                return this.setRadians(null);
             }
     
             // Устанавливает угол поворота прямоугольника
