@@ -55,6 +55,14 @@ const animate = time => {
 	ctx.fillText('bl', rect.blx, rect.bly);
 	ctx.fillText('br', rect.brx, rect.bry);
 
+
+	ctx.fillStyle = '#e88206';
+
+	ctx.fillText('t', rect.tx, rect.ty);
+	ctx.fillText('l', rect.lx, rect.ly);
+	ctx.fillText('r', rect.rx, rect.ry);
+	ctx.fillText('b', rect.bx, rect.by);
+
 	requestAnimationFrame(animate);
 };
 

@@ -35,10 +35,24 @@
             method setRadians(real radians) -> Rectradians {
                 real wa = (bj_PI - Atan(this.height / this.width) * 2) * .5;
                 real ar, d;
+                real hw = this.width * .5;
+                real hh = this.height * .5;
+                real hp = bj_PI * .5;
 
-                this.radians = normalize(radians);
                 this.diagonal = SquareRoot(this.width * this.width + this.height * this.height);
                 d = this.diagonal * .5;
+
+                this.radians = normalize(radians);
+                this.tx = this.cx + hh * Cos(this.radians);
+                this.ty = this.cy + hh * Sin(this.radians);
+
+                nr = normalize(radians + hp);
+                this.rx = this.cx + hw * Cos(nr);
+                this.ry = this.cy + hw * Sin(nr);
+
+                nr = normalize(radians - hp);
+                this.lx = this.cx + hw * Cos(nr);
+                this.ly = this.cy + hw * Sin(nr);
     
                 ar = normalize(radians - wa);
                 this.trx = this.cx + d * Cos(ar);
@@ -49,6 +63,8 @@
                 this.tly = this.cy + d * Sin(ar);
     
                 radians = radians + bj_PI;
+                this.bx = this.cx + hh * Cos(radians);
+		        this.by = this.cy + hh * Sin(radians);
     
                 ar = normalize(radians - wa);
                 this.blx = this.cx + d * Cos(ar);

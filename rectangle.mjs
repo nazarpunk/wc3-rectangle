@@ -1,4 +1,13 @@
+const bj_PI = Math.PI;
+const Cos = Math.cos;
+const Sin = Math.sin;
+
 export class Rectangle {
+
+	cx = 0;
+	cy = 0;
+
+
 	tx = 0;
 	ty = 0;
 	lx = 0;
@@ -17,13 +26,12 @@ export class Rectangle {
 	brx = 0;
 	bry = 0;
 
-	cx = 0;
-	cy = 0;
-
 	radians = 0;
 
 	width = 0;
 	height = 0;
+
+	diagonal = 0;
 
 	constructor(cx, cy, width, height, radians) {
 		this.cx = cx;
@@ -35,36 +43,53 @@ export class Rectangle {
 	}
 
 	setRadians(radians) {
-		const d = Math.sqrt(this.width * this.width + this.height * this.height) * .5;
-		const wa = (Math.PI - Math.atan(this.height / this.width) * 2) * .5;
+		this.diagonal = Math.sqrt(this.width * this.width + this.height * this.height);
+
+		const d = this.diagonal * .5;
+		const wr = (bj_PI - Math.atan(this.height / this.width) * 2) * .5;
+		const hw = this.width * .5;
+		const hh = this.height * .5;
+		const hp = bj_PI * .5;
+
+		let nr;
 
 		this.radians = normalize(radians);
+		this.tx = this.cx + hh * Cos(this.radians);
+		this.ty = this.cy + hh * Sin(this.radians);
 
-		let ar;
+		nr = normalize(radians + hp);
+		this.rx = this.cx + hw * Cos(nr);
+		this.ry = this.cy + hw * Sin(nr);
 
-		ar = normalize(radians - wa);
-		this.tlx = this.cx + d * Math.cos(ar);
-		this.tly = this.cy + d * Math.sin(ar);
+		nr = normalize(radians - hp);
+		this.lx = this.cx + hw * Cos(nr);
+		this.ly = this.cy + hw * Sin(nr);
 
-		ar = normalize(radians + wa);
-		this.trx = this.cx + d * Math.cos(ar);
-		this.try = this.cy + d * Math.sin(ar);
+		nr = normalize(radians - wr);
+		this.tlx = this.cx + d * Cos(nr);
+		this.tly = this.cy + d * Sin(nr);
 
-		radians += Math.PI;
+		nr = normalize(radians + wr);
+		this.trx = this.cx + d * Cos(nr);
+		this.try = this.cy + d * Sin(nr);
 
-		ar = normalize(radians - wa);
-		this.brx = this.cx + d * Math.cos(ar);
-		this.bry = this.cy + d * Math.sin(ar);
+		radians += bj_PI;
+		this.bx = this.cx + hh * Cos(radians);
+		this.by = this.cy + hh * Sin(radians);
 
-		ar = normalize(radians + wa);
-		this.blx = this.cx + d * Math.cos(ar);
-		this.bly = this.cy + d * Math.sin(ar);
+		nr = normalize(radians - wr);
+		this.brx = this.cx + d * Cos(nr);
+		this.bry = this.cy + d * Sin(nr);
+
+		nr = normalize(radians + wr);
+		this.blx = this.cx + d * Cos(nr);
+		this.bly = this.cy + d * Sin(nr);
 	}
 
 	distanceToXY(x, y) {
 		const a = normalize(-this.radians);
-		const cos = Math.cos(a);
-		const sin = Math.sin(a);
+		const cos = Cos(a);
+		const sin = Sin(a);
 		x = x - this.cx;
 		y = y - this.cy;
 		const xn = x * cos - y * sin;
@@ -82,6 +107,6 @@ export class Rectangle {
 	}
 }
 
-const normalize = r => r - 2 * Math.PI * Math.floor(r / (Math.PI * 2));
+const normalize = r => r - 2 * bj_PI * Math.floor(r / (bj_PI * 2));
 
 
