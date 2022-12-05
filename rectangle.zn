@@ -30,26 +30,26 @@
                 this.deallocate();
             }
 
-            // Устанавливает центр прямоугольника
-            method setCenter(real cx, real cy) -> Rectangle {
+            // Устанавливает центр и угол поворота прямоугольника
+            method setCenter(real cx, real cy, real radians) -> Rectangle {
                 if (cx != null) {
                     this.cx = cx;
                 }
                 if (cy != null) {
                     this.cy = cy;
                 }
-                return this.setRadians(null);
+                return this.setRadians(radians);
             }
 
-            // Устанавливает размер прямоугольника
-            method setSize(real width, real height) -> Rectangle {
+            // Устанавливает размер и угол поворота прямоугольника
+            method setSize(real width, real height, real radians) -> Rectangle {
                 if (width != null) {
                     this.width = width;
                 }
                 if (height != null) {
                     this.height = height;
                 }
-                return this.setRadians(null);
+                return this.setRadians(radians);
             }
     
             // Устанавливает угол поворота прямоугольника
