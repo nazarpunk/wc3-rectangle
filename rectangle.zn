@@ -1,22 +1,20 @@
 //! zinc
     library Rectangle {
 
-        // Помещает любой угол в радианах в диапазон [0 ... 2PI]
         function normalize (real r) -> real {
             return r - 2 * bj_PI * R2I(r / (bj_PI * 2));
         }
 
         public struct Rectangle {
+            real cx, cy, tx, ty, lx, ly, rx, ry, bx, by;
+        
             real tlx, tly, trx, try, blx, bly, brx, bry;
     
-            real cx, cy;
     
             real radians;
     
             real width, height, diagonal;
     
-            // Создаёт новый прямоугольник с центром в точке [cx, cy]
-            // шириной width и высотой height и углом radians
             static method create(real cx, real cy, real width, real height, real radians) -> Rectangle {
                 Rectangle this = Rectangle.allocate();
                 this.cx = cx;
@@ -30,32 +28,28 @@
                 this.deallocate();
             }
 
-            // Устанавливает центр и угол поворота прямоугольника
             method setCenter(real cx, real cy, real radians) -> Rectangle {
-                if (cx != null) {
-                    this.cx = cx;
-                }
-                if (cy != null) {
-                    this.cy = cy;
-                }
+                
+                this.cx = cx;
+                
+                this.cy = cy;
+                
                 return this.setRadians(radians);
             }
 
-            // Устанавливает размер и угол поворота прямоугольника
             method setSize(real width, real height, real radians) -> Rectangle {
-                if (width != null) {
-                    this.width = width;
-                }
-                if (height != null) {
-                    this.height = height;
-                }
+                
+                this.width = width;
+                
+                
+                this.height = height;
+                
                 return this.setRadians(radians);
             }
     
-            // Устанавливает угол поворота прямоугольника
             method setRadians(real radians) -> Rectangle {
                 real wa = (bj_PI - Atan(this.height / this.width) * 2) * .5;
-                real ar, d;
+                real nr, d;
                 real hw = this.width * .5;
                 real hh = this.height * .5;
                 real hp = bj_PI * .5;
@@ -63,9 +57,9 @@
                 this.diagonal = SquareRoot(this.width * this.width + this.height * this.height);
                 d = this.diagonal * .5;
 
-                if (radians != null) {
-                    this.radians = normalize(radians);
-                }
+                
+                this.radians = normalize(radians);
+                
                 this.tx = this.cx + hh * Cos(this.radians);
                 this.ty = this.cy + hh * Sin(this.radians);
 
@@ -77,30 +71,29 @@
                 this.rx = this.cx + hw * Cos(nr);
                 this.ry = this.cy + hw * Sin(nr);
     
-                ar = radians - wa;
-                this.trx = this.cx + d * Cos(ar);
-                this.try = this.cy + d * Sin(ar);
+                nr = radians - wa;
+                this.trx = this.cx + d * Cos(nr);
+                this.try = this.cy + d * Sin(nr);
     
-                ar = radians + wa;
-                this.tlx = this.cx + d * Cos(ar);
-                this.tly = this.cy + d * Sin(ar);
+                nr = radians + wa;
+                this.tlx = this.cx + d * Cos(nr);
+                this.tly = this.cy + d * Sin(nr);
     
                 radians = radians + bj_PI;
                 this.bx = this.cx + hh * Cos(radians);
                 this.by = this.cy + hh * Sin(radians);
     
-                ar = radians - wa;
-                this.blx = this.cx + d * Cos(ar);
-                this.bly = this.cy + d * Sin(ar);
+                nr = radians - wa;
+                this.blx = this.cx + d * Cos(nr);
+                this.bly = this.cy + d * Sin(nr);
     
-                ar = radians + wa;
-                this.brx = this.cx + d * Cos(ar);
-                this.bry = this.cy + d * Sin(ar);
+                nr = radians + wa;
+                this.brx = this.cx + d * Cos(nr);
+                this.bry = this.cy + d * Sin(nr);
 
                 return this;
             }
     
-            // Возвращает квадрат расстояния между точкой [x,y] и ближайшей точкой прямоугольника
             method distanceToXY(real x, real y) -> real {
                 real a = 0 - this.radians;
                 real cos = Cos(a);
@@ -122,7 +115,6 @@
                 return dx * dx + dy * dy;
             }
 
-            // Смещает все точки прямоугольника
             method translateXY(real tx, real ty) -> Rectangle {
                 this.cx = this.cx + tx;
                 this.cy = this.cy + ty;
@@ -139,16 +131,14 @@
                 return this;
             }
 
-            // Смещает все точки прямоугольника
             method translatePolar(real distance, real radians) -> Rectangle {
                 real cos = Cos(radians);
                 real sin = Sin(radians);
                 this.cx = this.cx + distance * Cos(radians);
                 this.cy = this.cy + distance * Sin(radians);
-                return this.setRadians(null);
+                return this.setRadians(this.radians);
             }
-
-            // Поворачивает прямоугольник вокруг точки [rx, ry] на угол radians
+            
             method rotate(real rx, real ry, real radians) -> Rectangle {
                 real cos = Cos(radians);
                 real sin = Sin(radians);
