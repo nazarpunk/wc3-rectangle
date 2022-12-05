@@ -1,6 +1,7 @@
 //! zinc
     library Rectangle {
 
+        // Помещает любой угол в радианах в диапазон [0 ... 2PI]
         function normalize (real r) -> real {
             return r - 2 * bj_PI * R2I(r / (bj_PI * 2));
         }
@@ -14,6 +15,9 @@
     
             real width, height, diagonal;
     
+            // Создаёт новый прямоугольник с центром в точке [cX, cY]
+            // шириной width и высотой height
+            // и углом angle, задаваемого в радианах
             static method create(real cX, real cY, real width, real height, real angle) -> Rectangle {
                 Rectangle this = Rectangle.allocate();
                 this.cX = cX;
@@ -29,6 +33,7 @@
                 this.deallocate();
             }
     
+            // Устанавливает угол поворота прямоугольника в радианах
             method setAngle(real angle) {
                 real wa = (bj_PI - Atan(this.height / this.width) * 2) * .5;
                 real ar, d;
@@ -38,24 +43,26 @@
                 d = this.diagonal * .5;
     
                 ar = normalize(angle - wa);
-                this.tlX = this.cX + d * Cos(ar);
-                this.tlY = this.cY + d * Sin(ar);
-    
-                ar = normalize(angle + wa);
                 this.trX = this.cX + d * Cos(ar);
                 this.trY = this.cY + d * Sin(ar);
+    
+                ar = normalize(angle + wa);
+                this.tlX = this.cX + d * Cos(ar);
+                this.tlY = this.cY + d * Sin(ar);
     
                 angle = angle + bj_PI;
     
                 ar = normalize(angle - wa);
-                this.brX = this.cX + d * Cos(ar);
-                this.brY = this.cY + d * Sin(ar);
-    
-                ar = normalize(angle + wa);
                 this.blX = this.cX + d * Cos(ar);
                 this.blY = this.cY + d * Sin(ar);
+    
+                ar = normalize(angle + wa);
+                this.brX = this.cX + d * Cos(ar);
+                this.brY = this.cY + d * Sin(ar);
             }
     
+            // Возвращает квадрат расстояния между точкой [x,y]
+            // и ближайшей точкой прямоугольника
             method distanceToXY(real x, real y) -> real {
                 real a = normalize(0 - this.angle);
                 real cos = Cos(a);
@@ -77,6 +84,7 @@
                 return dx * dx + dy * dy;
             }
 
+            // Смещает все точки прямоугольника
             method translate(real tx, real ty) -> real {
                 this.cX = this.cX + tx;
                 this.cY = this.cY + ty;
