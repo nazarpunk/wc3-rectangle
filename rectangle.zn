@@ -10,7 +10,6 @@
         
             real tlx, tly, trx, try, blx, bly, brx, bry;
     
-    
             real radians;
     
             real width, height, diagonal;
@@ -29,21 +28,14 @@
             }
 
             method setCenter(real cx, real cy, real radians) -> Rectangle {
-                
                 this.cx = cx;
-                
                 this.cy = cy;
-                
                 return this.setRadians(radians);
             }
 
             method setSize(real width, real height, real radians) -> Rectangle {
-                
                 this.width = width;
-                
-                
                 this.height = height;
-                
                 return this.setRadians(radians);
             }
     
@@ -57,7 +49,6 @@
                 this.diagonal = SquareRoot(this.width * this.width + this.height * this.height);
                 d = this.diagonal * .5;
 
-                
                 this.radians = normalize(radians);
                 
                 this.tx = this.cx + hh * Cos(this.radians);
