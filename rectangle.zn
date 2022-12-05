@@ -56,7 +56,7 @@
                 this.blY = this.cY + d * Sin(ar);
             }
     
-            method distanceToPoint(real x, real y) -> real {
+            method distanceToXY(real x, real y) -> real {
                 real a = normalize(0 - this.angle);
                 real cos = Cos(a);
                 real sin = Sin(a);
@@ -75,6 +75,20 @@
                 dy = RMaxBJ(0, RMaxBJ(this.cY - hw - y, y - (this.cY + hw)));
     
                 return dx * dx + dy * dy;
+            }
+
+            method translate(real tx, real ty) -> real {
+                this.cX = this.cX + tx;
+                this.cY = this.cY + ty;
+
+                this.tlX = this.tlX + tx;
+                this.tlY = this.tlY + ty;
+                this.trX = this.trX + tx;
+                this.trY = this.trY + ty;
+                this.blX = this.blX + tx;
+                this.blY = this.blY + ty;
+                this.brX = this.brX + tx;
+                this.brY = this.brY + ty;
             }
         }
     }
