@@ -69,19 +69,19 @@
                 this.tx = this.cx + hh * Cos(this.radians);
                 this.ty = this.cy + hh * Sin(this.radians);
 
-                nr = normalize(radians + hp);
+                nr = radians + hp;
                 this.lx = this.cx + hw * Cos(nr);
                 this.ly = this.cy + hw * Sin(nr);
 
-                nr = normalize(radians - hp);
+                nr = radians - hp;
                 this.rx = this.cx + hw * Cos(nr);
                 this.ry = this.cy + hw * Sin(nr);
     
-                ar = normalize(radians - wa);
+                ar = radians - wa;
                 this.trx = this.cx + d * Cos(ar);
                 this.try = this.cy + d * Sin(ar);
     
-                ar = normalize(radians + wa);
+                ar = radians + wa;
                 this.tlx = this.cx + d * Cos(ar);
                 this.tly = this.cy + d * Sin(ar);
     
@@ -89,11 +89,11 @@
                 this.bx = this.cx + hh * Cos(radians);
                 this.by = this.cy + hh * Sin(radians);
     
-                ar = normalize(radians - wa);
+                ar = radians - wa;
                 this.blx = this.cx + d * Cos(ar);
                 this.bly = this.cy + d * Sin(ar);
     
-                ar = normalize(radians + wa);
+                ar = radians + wa;
                 this.brx = this.cx + d * Cos(ar);
                 this.bry = this.cy + d * Sin(ar);
 
@@ -102,7 +102,7 @@
     
             // Возвращает квадрат расстояния между точкой [x,y] и ближайшей точкой прямоугольника
             method distanceToXY(real x, real y) -> real {
-                real a = normalize(0 - this.radians);
+                real a = 0 - this.radians;
                 real cos = Cos(a);
                 real sin = Sin(a);
                 real xn, yn, dx , dy ;
@@ -123,7 +123,7 @@
             }
 
             // Смещает все точки прямоугольника
-            method translate(real tx, real ty) -> Rectangle {
+            method translateXY(real tx, real ty) -> Rectangle {
                 this.cx = this.cx + tx;
                 this.cy = this.cy + ty;
 
@@ -137,6 +137,15 @@
                 this.bry = this.bry + ty;
                 
                 return this;
+            }
+
+            // Смещает все точки прямоугольника
+            method translatePolar(real distance, real radians) -> Rectangle {
+                real cos = Cos(radians);
+                real sin = Sin(radians);
+                this.cx = this.cx + distance * Cos(radians);
+                this.cy = this.cy + distance * Sin(radians);
+                return this.setRadians(null);
             }
 
             // Поворачивает прямоугольник вокруг точки [rx, ry] на угол radians

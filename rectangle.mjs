@@ -59,19 +59,19 @@ export class Rectangle {
 		this.tx = this.cx + hh * Cos(this.radians);
 		this.ty = this.cy + hh * Sin(this.radians);
 
-		nr = normalize(radians + hp);
+		nr = radians + hp;
 		this.rx = this.cx + hw * Cos(nr);
 		this.ry = this.cy + hw * Sin(nr);
 
-		nr = normalize(radians - hp);
+		nr = radians - hp;
 		this.lx = this.cx + hw * Cos(nr);
 		this.ly = this.cy + hw * Sin(nr);
 
-		nr = normalize(radians - wr);
+		nr = radians - wr;
 		this.tlx = this.cx + d * Cos(nr);
 		this.tly = this.cy + d * Sin(nr);
 
-		nr = normalize(radians + wr);
+		nr = radians + wr;
 		this.trx = this.cx + d * Cos(nr);
 		this.try = this.cy + d * Sin(nr);
 
@@ -79,17 +79,17 @@ export class Rectangle {
 		this.bx = this.cx + hh * Cos(radians);
 		this.by = this.cy + hh * Sin(radians);
 
-		nr = normalize(radians - wr);
+		nr = radians - wr;
 		this.brx = this.cx + d * Cos(nr);
 		this.bry = this.cy + d * Sin(nr);
 
-		nr = normalize(radians + wr);
+		nr = radians + wr;
 		this.blx = this.cx + d * Cos(nr);
 		this.bly = this.cy + d * Sin(nr);
 	}
 
 	distanceToXY(x, y) {
-		const a = normalize(-this.radians);
+		const a = -this.radians;
 		const cos = Cos(a);
 		const sin = Sin(a);
 		x = x - this.cx;
