@@ -25,15 +25,15 @@ const animate = time => {
 	canvas.height = document.body.clientHeight;
 
 	ctx.beginPath();
-	ctx.moveTo(rect.tlX, rect.tlY);
-	ctx.lineTo(rect.trX, rect.trY);
-	ctx.lineTo(rect.brX, rect.brY);
-	ctx.lineTo(rect.blX, rect.blY);
+	ctx.moveTo(rect.tlx, rect.tly);
+	ctx.lineTo(rect.trx, rect.try);
+	ctx.lineTo(rect.brx, rect.bry);
+	ctx.lineTo(rect.blx, rect.bly);
 	ctx.closePath();
 
-	rect.setAngle(rect.angle + Math.PI * .1 * dx);
+	rect.setRadians(rect.radians + Math.PI * .1 * dx);
 	const radius = 50;
-	const d = rect.distanceToPoint(mx, my, ctx);
+	const d = rect.distanceToXY(mx, my, ctx);
 
 	ctx.fillStyle = d > radius ? 'rgba(255,0,0,0.6)' : 'rgba(6,245,162,0.6)';
 	ctx.fill();
@@ -50,10 +50,10 @@ const animate = time => {
 	ctx.font = `20px Verdana`;
 
 	ctx.fillText(`Расстояние до центра окружности: ${d.toFixed(3)}`, 10, 50);
-	ctx.fillText('tl', rect.tlX, rect.tlY);
-	ctx.fillText('tr', rect.trX, rect.trY);
-	ctx.fillText('bl', rect.blX, rect.blY);
-	ctx.fillText('br', rect.brX, rect.brY);
+	ctx.fillText('tl', rect.tlx, rect.tly);
+	ctx.fillText('tr', rect.trx, rect.try);
+	ctx.fillText('bl', rect.blx, rect.bly);
+	ctx.fillText('br', rect.brx, rect.bry);
 
 	requestAnimationFrame(animate);
 };
