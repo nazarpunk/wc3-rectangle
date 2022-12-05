@@ -53,7 +53,7 @@ export class Rectangle {
 		this.blY = this.cY + d * Math.sin(ar);
 	}
 
-	distanceToPoint(x, y, ctx) {
+	distanceToPoint(x, y) {
 		const a = normalize(-this.angle);
 		const cos = Math.cos(a);
 		const sin = Math.sin(a);

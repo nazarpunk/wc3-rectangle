@@ -6,22 +6,13 @@
         }
 
         public struct Rectangle {
-            real tlX = 0;
-            real tlY = 0;
-            real trX = 0;
-            real trY = 0;
-            real blX = 0;
-            real blY = 0;
-            real brX = 0;
-            real brY = 0;
+            real tlX, tlY, trX, trY, blX, blY, brX, brY;
     
-            real cX = 0;
-            real cY = 0;
+            real cX, cY;
     
-            real angle = 0;
+            real angle;
     
-            real width = 0;
-            real height = 0;
+            real width, height, diagonal;
     
             static method create(real cX, real cY, real width, real height, real angle) -> Rectangle {
                 Rectangle this = Rectangle.allocate();
@@ -39,11 +30,12 @@
             }
     
             method setAngle(real angle) {
-                real d = SquareRoot(this.width * this.width + this.height * this.height) * .5;
                 real wa = (bj_PI - Atan(this.height / this.width) * 2) * .5;
-                real ar;
+                real ar, d;
 
                 this.angle = normalize(angle);
+                this.diagonal = SquareRoot(this.width * this.width + this.height * this.height);
+                d = this.diagonal * .5;
     
                 ar = normalize(angle - wa);
                 this.tlX = this.cX + d * Cos(ar);
