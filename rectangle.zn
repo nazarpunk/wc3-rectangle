@@ -47,12 +47,12 @@
                 this.ty = this.cy + hh * Sin(this.radians);
 
                 nr = normalize(radians + hp);
-                this.rx = this.cx + hw * Cos(nr);
-                this.ry = this.cy + hw * Sin(nr);
-
-                nr = normalize(radians - hp);
                 this.lx = this.cx + hw * Cos(nr);
                 this.ly = this.cy + hw * Sin(nr);
+
+                nr = normalize(radians - hp);
+                this.rx = this.cx + hw * Cos(nr);
+                this.ry = this.cy + hw * Sin(nr);
     
                 ar = normalize(radians - wa);
                 this.trx = this.cx + d * Cos(ar);

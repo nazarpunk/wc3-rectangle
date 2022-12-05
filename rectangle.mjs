@@ -1,6 +1,9 @@
 const bj_PI = Math.PI;
 const Cos = Math.cos;
 const Sin = Math.sin;
+const Atan = Math.atan;
+const SquareRoot = Math.sqrt;
+const RMaxBJ = Math.max;
 
 export class Rectangle {
 
@@ -43,16 +46,15 @@ export class Rectangle {
 	}
 
 	setRadians(radians) {
-		this.diagonal = Math.sqrt(this.width * this.width + this.height * this.height);
+		this.diagonal = SquareRoot(this.width * this.width + this.height * this.height);
 
 		const d = this.diagonal * .5;
-		const wr = (bj_PI - Math.atan(this.height / this.width) * 2) * .5;
+		const wr = (bj_PI - Atan(this.height / this.width) * 2) * .5;
 		const hw = this.width * .5;
 		const hh = this.height * .5;
 		const hp = bj_PI * .5;
 
 		let nr;
-
 		this.radians = normalize(radians);
 		this.tx = this.cx + hh * Cos(this.radians);
 		this.ty = this.cy + hh * Sin(this.radians);
@@ -73,7 +75,7 @@ export class Rectangle {
 		this.trx = this.cx + d * Cos(nr);
 		this.try = this.cy + d * Sin(nr);
 
-		radians += bj_PI;
+		radians = radians + bj_PI;
 		this.bx = this.cx + hh * Cos(radians);
 		this.by = this.cy + hh * Sin(radians);
 
@@ -100,10 +102,10 @@ export class Rectangle {
 		const hh = this.height * .5;
 		const hw = this.width * .5;
 
-		const dx = Math.max(0, this.cx - hh - x, x - (this.cx + hh));
-		const dy = Math.max(0, this.cy - hw - y, y - (this.cy + hw));
+		const dx = RMaxBJ(0, RMaxBJ(this.cx - hh - x, x - (this.cx + hh)));
+		const dy = RMaxBJ(0, RMaxBJ(this.cy - hw - y, y - (this.cy + hw)));
 
-		return Math.sqrt(dx * dx + dy * dy);
+		return SquareRoot(dx * dx + dy * dy);
 	}
 }
 
