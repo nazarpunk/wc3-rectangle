@@ -3,7 +3,7 @@
 
         function normalize (real r) -> real {
             return r - 2 * bj_PI * R2I(r / (bj_PI * 2));
-        };
+        }
 
         public struct Rectangle {
             real tlX = 0;
@@ -31,6 +31,7 @@
                 this.height = height;
                 this.angle = angle;
                 this.setAngle(angle);
+                return this;
             }
 
             method destroy() {
@@ -52,7 +53,7 @@
                 this.trX = this.cX + d * Cos(ar);
                 this.trY = this.cY + d * Sin(ar);
     
-                angle = angle + Math.PI;
+                angle = angle + bj_PI;
     
                 ar = normalize(angle - wa);
                 this.brX = this.cX + d * Cos(ar);
@@ -63,7 +64,7 @@
                 this.blY = this.cY + d * Sin(ar);
             }
     
-            distanceToPoint(real x, real y) -> real {
+            method distanceToPoint(real x, real y) -> real {
                 real a = normalize(0 - this.angle);
                 real cos = Cos(a);
                 real sin = Sin(a);
