@@ -85,7 +85,7 @@
             }
 
             // Смещает все точки прямоугольника
-            method translate(real tx, real ty) -> real {
+            method translate(real tx, real ty) {
                 this.cX = this.cX + tx;
                 this.cY = this.cY + ty;
 
