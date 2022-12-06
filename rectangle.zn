@@ -94,7 +94,7 @@
                 return this;
             }
     
-            method distanceToXY(real x, real y) -> real {
+            method distanceSquaredXY(real x, real y) -> real {
                 real a = 0 - this.radians;
                 real cos = Cos(a);
                 real sin = Sin(a);

@@ -8,7 +8,7 @@ native UnitAlive takes unit u returns boolean
     
             function tag(string s, real x, real y) {
                 texttag tt = CreateTextTag();
-                SetTextTagText(tt, s, .05);
+                SetTextTagText(tt, s, .02);
                 SetTextTagPos(tt, x, y, 0);
                 tt = null;
             }
@@ -80,7 +80,7 @@ native UnitAlive takes unit u returns boolean
                         tx = GetUnitX(t);
                         ty = GetUnitY(t);
     
-                        if (!IsUnitOwnedByPlayer(t, GetOwningPlayer(u)) && IsUnitInRangeXY(t, tx, ty + r.distanceToXY(tx, ty),0)) {
+                        if (!IsUnitOwnedByPlayer(t, GetOwningPlayer(u)) && IsUnitInRangeXY(t, tx, ty + SquareRoot(r.distanceToXY(tx, ty)),0)) {
                             SetUnitExploded(t, true);
                             KillUnit(t);
                         }
