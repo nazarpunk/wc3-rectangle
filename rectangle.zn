@@ -1,148 +1,154 @@
 //! zinc
     library Rectangle {
 
-        function normalize (real r) -> real {
-            return r - 2 * bj_PI * R2I(r / (bj_PI * 2));
-        }
-
         public struct Rectangle {
             real cx, cy, tx, ty, lx, ly, rx, ry, bx, by;
-        
+
             real tlx, tly, trx, try, blx, bly, brx, bry;
-    
+
             real radians;
-    
+
             real width, height, diagonal;
-    
+
             static method create(real cx, real cy, real width, real height, real radians) -> Rectangle {
-                Rectangle this = Rectangle.allocate();
-                this.cx = cx;
-                this.cy = cy;
-                this.width = width;
-                this.height = height;
-                return this.setRadians(radians);
+                return Rectangle.allocate().setData(cx,cy,width,height,radians);
             }
 
             method destroy() {
-                this.deallocate();
+                deallocate();
             }
+
+			method setData(real cx, real cy, real width, real height, real radians)-> Rectangle {
+				this.cx = cx;
+                this.cy = cy;
+				this.width = width;
+                this.height = height;
+                return setRadians(radians);
+			}
 
             method setCenter(real cx, real cy, real radians) -> Rectangle {
                 this.cx = cx;
                 this.cy = cy;
-                return this.setRadians(radians);
+                return setRadians(radians);
             }
 
             method setSize(real width, real height, real radians) -> Rectangle {
                 this.width = width;
                 this.height = height;
-                return this.setRadians(radians);
+                return setRadians(radians);
             }
-    
+
             method setRadians(real radians) -> Rectangle {
-                real wa = (bj_PI - Atan(this.height / this.width) * 2) * .5;
+                real wa = (bj_PI - Atan(height / width) * 2) * .5;
                 real nr, d;
-                real hw = this.width * .5;
-                real hh = this.height * .5;
+                real hw = width * .5;
+                real hh = height * .5;
                 real hp = bj_PI * .5;
 
-                this.diagonal = SquareRoot(this.width * this.width + this.height * this.height);
-                d = this.diagonal * .5;
+                diagonal = SquareRoot(width * width + height * height);
+                d = diagonal * .5;
 
-                this.radians = normalize(radians);
-                
-                this.tx = this.cx + hh * Cos(this.radians);
-                this.ty = this.cy + hh * Sin(this.radians);
+                this.radians = radians - 2 * bj_PI * R2I(radians / (bj_PI * 2));
+
+                tx = cx + hh * Cos(this.radians);
+                ty = cy + hh * Sin(this.radians);
 
                 nr = radians + hp;
-                this.lx = this.cx + hw * Cos(nr);
-                this.ly = this.cy + hw * Sin(nr);
+                lx = cx + hw * Cos(nr);
+                ly = cy + hw * Sin(nr);
 
                 nr = radians - hp;
-                this.rx = this.cx + hw * Cos(nr);
-                this.ry = this.cy + hw * Sin(nr);
-    
+                rx = cx + hw * Cos(nr);
+                ry = cy + hw * Sin(nr);
+
                 nr = radians - wa;
-                this.trx = this.cx + d * Cos(nr);
-                this.try = this.cy + d * Sin(nr);
-    
+                trx = cx + d * Cos(nr);
+                try = cy + d * Sin(nr);
+
                 nr = radians + wa;
-                this.tlx = this.cx + d * Cos(nr);
-                this.tly = this.cy + d * Sin(nr);
-    
+                tlx = cx + d * Cos(nr);
+                tly = cy + d * Sin(nr);
+
                 radians = radians + bj_PI;
-                this.bx = this.cx + hh * Cos(radians);
-                this.by = this.cy + hh * Sin(radians);
-    
+                bx = cx + hh * Cos(radians);
+                by = cy + hh * Sin(radians);
+
                 nr = radians - wa;
-                this.blx = this.cx + d * Cos(nr);
-                this.bly = this.cy + d * Sin(nr);
-    
+                blx = cx + d * Cos(nr);
+                bly = cy + d * Sin(nr);
+
                 nr = radians + wa;
-                this.brx = this.cx + d * Cos(nr);
-                this.bry = this.cy + d * Sin(nr);
+                brx = cx + d * Cos(nr);
+                bry = cy + d * Sin(nr);
 
                 return this;
             }
-    
+
             method distanceSquaredXY(real x, real y) -> real {
-                real a = 0 - this.radians;
+                real a = 0 - radians;
                 real cos = Cos(a);
                 real sin = Sin(a);
                 real xn, yn, dx , dy ;
-                real hh = this.height * .5;
-                real hw = this.width * .5;
+                real hh = height * .5;
+                real hw = width * .5;
 
-                x = x - this.cx;
-                y = y - this.cy;
+                x = x - cx;
+                y = y - cy;
                 xn = x * cos - y * sin;
                 yn = x * sin + y * cos;
-                x = xn + this.cx;
-                y = yn + this.cy;
+                x = xn + cx;
+                y = yn + cy;
 
-                dx = RMaxBJ(0, RMaxBJ(this.cx - hh - x, x - (this.cx + hh)));
-                dy = RMaxBJ(0, RMaxBJ(this.cy - hw - y, y - (this.cy + hw)));
-    
+                dx = RMaxBJ(0, RMaxBJ(cx - hh - x, x - (cx + hh)));
+                dy = RMaxBJ(0, RMaxBJ(cy - hw - y, y - (cy + hw)));
+
                 return dx * dx + dy * dy;
             }
 
-            method translateXY(real tx, real ty) -> Rectangle {
-                this.cx = this.cx + tx;
-                this.cy = this.cy + ty;
+            method translateXY(real dx, real dy) -> Rectangle {
+                cx = cx + dx;
+                cy = cy + dy;
 
-                this.tlx = this.tlx + tx;
-                this.tly = this.tly + ty;
-                this.trx = this.trx + tx;
-                this.try = this.try + ty;
-                this.blx = this.blx + tx;
-                this.bly = this.bly + ty;
-                this.brx = this.brx + tx;
-                this.bry = this.bry + ty;
-                
+				tx = tx + dx;
+				ty = ty + dy;
+				lx = lx + dx;
+				ly = ly + dy;
+				rx = rx + dx;
+				ry = ry + dy;
+				bx = bx + dx;
+				by = by + dy;
+
+                tlx = tlx + dx;
+                tly = tly + dy;
+                trx = trx + dx;
+                try = try + dy;
+                blx = blx + dx;
+                bly = bly + dy;
+                brx = brx + dx;
+                bry = bry + dy;
+
                 return this;
             }
 
             method translatePolar(real distance, real radians) -> Rectangle {
-                real cos = Cos(radians);
-                real sin = Sin(radians);
-                this.cx = this.cx + distance * Cos(radians);
-                this.cy = this.cy + distance * Sin(radians);
-                return this.setRadians(this.radians);
+                cx = cx + distance * Cos(radians);
+                cy = cy + distance * Sin(radians);
+                return setRadians(radians);
             }
-            
-            method rotate(real rx, real ry, real radians) -> Rectangle {
+
+            method rotate(real ox, real oy, real radians) -> Rectangle {
                 real cos = Cos(radians);
                 real sin = Sin(radians);
                 real xn, yn;
 
-                this.cx = this.cx - rx;
-                this.cy = this.cy - ry;
-                xn = this.cx * cos - this.cy * sin;
-                yn = this.cx * sin + this.cy * cos;
-                this.cx = xn + rx;
-                this.cy = yn + ry;
+                cx = cx - ox;
+                cy = cy - oy;
+                xn = cx * cos - cy * sin;
+                yn = cx * sin + cy * cos;
+                cx = xn + rx;
+                cy = yn + ry;
 
-                return this.setRadians(this.radians + radians);
+                return setRadians(this.radians + radians);
             }
 
         }
