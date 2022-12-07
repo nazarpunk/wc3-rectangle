@@ -134,7 +134,7 @@ export class Rectangle {
 		if (d > 0) {
 			return -d;
 		}
-		d = RMinBJ(x - xmin, RMinBJ(xmax - x), RMinBJ(y - ymin, ymax - y));
+		d = RMinBJ(x - xmin, RMinBJ(xmax - x, RMinBJ(y - ymin, ymax - y)));
 		return d;
 	}
 }
