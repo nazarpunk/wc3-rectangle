@@ -84,27 +84,6 @@
                 return this;
             }
     
-            method distanceSquaredXY(real x, real y) -> real {
-                real a = 0 - radians;
-                real cos = Cos(a);
-                real sin = Sin(a);
-                real xn, yn, dx , dy ;
-                real hh = height * .5;
-                real hw = width * .5;
-
-                x = x - cx;
-                y = y - cy;
-                xn = x * cos - y * sin;
-                yn = x * sin + y * cos;
-                x = xn + cx;
-                y = yn + cy;
-
-                dx = RMaxBJ(0, RMaxBJ(cx - hh - x, x - (cx + hh)));
-                dy = RMaxBJ(0, RMaxBJ(cy - hw - y, y - (cy + hw)));
-    
-                return dx * dx + dy * dy;
-            }
-
             method translateOffset(real dx, real dy) -> Rectangle {
                 cx = cx + dx;
                 cy = cy + dy;
@@ -151,7 +130,56 @@
                 return setRadians(this.radians + radians);
             }
 
+            method distanceSquaredXY(real x, real y) -> real {
+                real a = 0 - radians;
+                real cos = Cos(a);
+                real sin = Sin(a);
+                real xn, yn, dx , dy ;
+                real hh = height * .5;
+                real hw = width * .5;
+
+                x = x - cx;
+                y = y - cy;
+                xn = x * cos - y * sin;
+                yn = x * sin + y * cos;
+                x = xn + cx;
+                y = yn + cy;
+
+                dx = RMaxBJ(0, RMaxBJ(cx - hh - x, x - (cx + hh)));
+                dy = RMaxBJ(0, RMaxBJ(cy - hw - y, y - (cy + hw)));
+
+                return dx * dx + dy * dy;
+            }
+
+            method distanceSquaredInnerXY(real x, real y) -> real {
+                real a = 0 - radians;
+                real cos = Cos(a);
+                real sin = Sin(a);
+                real xn, yn, dx , dy, d;
+                real hh = height * .5;
+                real hw = width * .5;
+                real xmin = cx - hh;
+                real xmax = cx + hh;
+                real ymin = cy - hw;
+                real ymax = cy + hw;
+    
+                x = x - cx;
+                y = y - cy;
+                xn = x * cos - y * sin;
+                yn = x * sin + y * cos;
+                x = xn + cx;
+                y = yn + cy;
+    
+                dx = RMaxBJ(0, RMaxBJ(xmin - x, x - xmax));
+                dy = RMaxBJ(0, RMaxBJ(ymin - y, y - ymax));
+    
+                d = dx * dx + dy * dy;
+                if (d > 0) {
+                    return 0 - d;
+                }
+                d = RMinBJ(x - xmin, RMinBJ(xmax - x, RMinBJ(y - ymin, ymax - y)));
+                return d * d;
+            }
         }
     }
-
 //! endzinc
