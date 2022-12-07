@@ -3,6 +3,7 @@ const Cos = Math.cos;
 const Sin = Math.sin;
 const Atan = Math.atan;
 const SquareRoot = Math.sqrt;
+const RMinBJ = Math.min;
 const RMaxBJ = Math.max;
 
 export class Rectangle {
@@ -88,7 +89,7 @@ export class Rectangle {
 		this.bly = this.cy + d * Sin(nr);
 	}
 
-	distanceToXY(x, y) {
+	distanceSquaredXY(x, y) {
 		const a = -this.radians;
 		const cos = Cos(a);
 		const sin = Sin(a);
@@ -106,6 +107,35 @@ export class Rectangle {
 		const dy = RMaxBJ(0, RMaxBJ(this.cy - hw - y, y - (this.cy + hw)));
 
 		return SquareRoot(dx * dx + dy * dy);
+	}
+
+	distanceSquaredInnerXY(x, y) {
+		const a = -this.radians;
+		const cos = Cos(a);
+		const sin = Sin(a);
+		x = x - this.cx;
+		y = y - this.cy;
+		const xn = x * cos - y * sin;
+		const yn = x * sin + y * cos;
+		x = xn + this.cx;
+		y = yn + this.cy;
+
+		const hh = this.height * .5;
+		const hw = this.width * .5;
+		const xmin = this.cx - hh;
+		const xmax = this.cx + hh;
+		const ymin = this.cy - hw;
+		const ymax = this.cy + hw;
+
+		const dx = RMaxBJ(0, RMaxBJ(xmin - x, x - xmax));
+		const dy = RMaxBJ(0, RMaxBJ(ymin - y, y - ymax));
+
+		let d = SquareRoot(dx * dx + dy * dy);
+		if (d > 0) {
+			return -d;
+		}
+		d = RMinBJ(x - xmin, RMinBJ(xmax - x), RMinBJ(y - ymin, ymax - y));
+		return d;
 	}
 }
 
