@@ -2,7 +2,7 @@ Rectange
 =
 
 <p align="center">
-<a href="https://xgm.guru/p/wc3/rectangle">XGN</a>
+<a href="https://xgm.guru/p/wc3/rectangle">XGM</a>
 | 
 <a href="https://nazarpunk.github.io/wc3-zinc-rectangle">WebDemo</a>
 </p>
