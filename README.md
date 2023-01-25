@@ -80,3 +80,8 @@ method rotate(real ox, real oy, real radians) -> Rectangle
 method distanceSquaredXY(real x, real y) -> real
 ```
 **distanceSquaredXY** возвращает квадрат кратчайшего расстояния между произвольной точкой и ближайшей точкой прямоугольника.
+
+```
+method distanceSquaredInnerXY(real x, real y) -> real
+```
+**distanceSquaredInnerXY** возвращает квадрат расстояния между произвольной точкой внутри прямоугольника и ближайшей точкой на стороне прямоугольника. Для точки лежащей вне прямоугольника возвращает отрицательное значение **distanceSquaredXY**.
