@@ -1,3 +1,5 @@
+// noinspection DuplicatedCode
+
 const bj_PI = Math.PI;
 const Cos = Math.cos;
 const Sin = Math.sin;
