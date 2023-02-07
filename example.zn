@@ -2,101 +2,93 @@ native UnitAlive takes unit u returns boolean
 
 //! zinc
     library Example requires Rectangle {
-        
+        unit caster, target;
+        group g = CreateGroup();
+        real ux, uy, sx, sy, targetX, targetY, d;
+        Rectangle r;
+
         location loca = Location(0, 0);
         location locb = Location(0, 0);
-        
+
         function tag(string s, real x, real y) {
             texttag tt = CreateTextTag();
             SetTextTagText(tt, s, .02);
             SetTextTagPos(tt, x, y, 0);
             tt = null;
         }
-        
+
         function light(real xa, real ya, real xb, real yb) {
             MoveLocation(loca, xa, ya);
             MoveLocation(locb, xb, yb);
             AddLightningEx("CHIM", true, xa, ya, GetLocationZ(loca), xb, yb, GetLocationZ(locb));
         }
-        
+
         function onInit() {
             integer i;
             trigger t;
-            unit u = gg_unit_N000_0002;
-                
+            caster = gg_unit_N000_0002;
+            r = Rectangle.create();
+
             FogEnable(false);
             FogMaskEnable(false);
-            SelectUnit(u , true);
-            PanCameraToTimed(GetUnitX(u), GetUnitY(u), 0);
-            SelectHeroSkill( u, 'A000' );
-            u = null;
-                
+            SelectUnit(caster , true);
+            PanCameraToTimed(GetUnitX(caster), GetUnitY(caster), 0);
+            SelectHeroSkill( caster, 'A000' );
+
             t = CreateTrigger();
             for (0 <= i < bj_MAX_PLAYER_SLOTS) {
                 TriggerRegisterPlayerUnitEvent(t, Player(i), EVENT_PLAYER_UNIT_SPELL_EFFECT, null);
             }
-            TriggerAddCondition(t, Filter(function() -> boolean {
-                return GetSpellAbilityId() == 'A000';
-            }));
             TriggerAddAction(t, function() {
-                unit u = GetTriggerUnit();
-                real ux = GetUnitX(u);
-                real uy = GetUnitY(u);
-                real sx = GetSpellTargetX();
-                real sy = GetSpellTargetY();
-                real f = Atan2(sy - uy, sx - ux);
-                group g = CreateGroup();
-                unit t;
-                real tx, ty , d;
-                real w = GetUnitState(u, UNIT_STATE_MAX_LIFE);
-                real h = GetUnitState(u, UNIT_STATE_MAX_MANA);
-                    
-                Rectangle r = Rectangle.create(sx, sy, w, h, f);
-                    
+                if (GetSpellAbilityId() != 'A000'){
+                    return;
+                }
+                caster = GetTriggerUnit();
+                ux = GetUnitX(caster);
+                uy = GetUnitY(caster);
+                sx = GetSpellTargetX();
+                sy = GetSpellTargetY();
+
+                r.setData(
+                    sx,
+                    sy,
+                    GetUnitState(caster, UNIT_STATE_MAX_LIFE),
+                    GetUnitState(caster, UNIT_STATE_MAX_MANA),
+                    Atan2(sy - uy, sx - ux)
+                );
+
                 tag("tl", r.tlx, r.tly);
                 tag("tr", r.trx, r.try);
                 tag("br", r.brx, r.bry);
                 tag("bl", r.blx, r.bly);
-                               
+
                 tag("c", r.cx, r.cy);
                 tag("t", r.tx, r.ty);
                 tag("l", r.lx, r.ly);
                 tag("r", r.rx, r.ry);
                 tag("b", r.bx, r.by);
-                        
+
                 light(r.tlx, r.tly, r.trx, r.try);
                 light(r.trx, r.try, r.brx, r.bry);
                 light(r.brx, r.bry, r.blx, r.bly);
                 light(r.blx, r.bly, r.tlx, r.tly);
-         
-                GroupEnumUnitsInRange(g, sx, sy, r.diagonal * .5 + 200, Filter(function() -> boolean {
-                    return UnitAlive(GetFilterUnit());
-                }));
-        
-                while(true) {
-                    t = FirstOfGroup(g);
-                    if (t == null) {
-                        break;
-                    }
-                    tx = GetUnitX(t);
-                    ty = GetUnitY(t);
-                    d = SquareRoot(r.distanceSquaredXY(tx, ty));
-        
-                    if (!IsUnitOwnedByPlayer(t, GetOwningPlayer(u)) && IsUnitInRangeXY(t, tx, ty + d, 0)) {
-                        SetUnitExploded(t, true);
-                        KillUnit(t);
-                    }
-        
-                    GroupRemoveUnit(g, t);
-                }
-                    
-                u = null;
-                t = null;
-                r.destroy();
-                DestroyGroup(g);
-                g = null;
+
+                GroupClear(g);
+                GroupEnumUnitsInRange(g, sx, sy, r.diagonal * .5 + 200, null);
+                ForGroup(g, function(){
+                    target = GetEnumUnit();
+                    if (!UnitAlive(target)) return;
+                    if (IsUnitOwnedByPlayer(target, GetOwningPlayer(caster))) return;
+                    targetX = GetUnitX(target);
+                    targetY = GetUnitY(target);
+                    d = r.distanceXY(targetX, targetY);
+                    if (d < 0 && !IsUnitInRangeXY(target, targetX, targetY + SquareRoot(-d), 0)) return;
+
+                    SetUnitExploded(target, true);
+                    KillUnit(target);
+                });
             });
-                
+
             t = null;
         }
     }
