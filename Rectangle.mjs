@@ -21,20 +21,19 @@ export class Rectangle {
 	 * @return {Rectangle}
 	 */
 	setRadians(radians) {
+		this.radians = radians - 2 * Math.PI * Math.floor(radians / (Math.PI * 2));
 		this.diagonal = Math.sqrt(this.width * this.width + this.height * this.height);
 
-		const d = this.diagonal * .5;
-		const wr = (Math.PI - Math.atan(this.height / this.width) * 2) * .5;
+		const wa = (Math.PI - Math.atan(this.height / this.width) * 2) * .5;
 		const hw = this.width * .5;
 		const hh = this.height * .5;
 		const hp = Math.PI * .5;
+		const d = this.diagonal * .5;
 
-		let nr;
-		this.radians = radians - 2 * Math.PI * Math.floor(radians / (Math.PI * 2));
 		this.tx = this.cx + hh * Math.cos(this.radians);
 		this.ty = this.cy + hh * Math.sin(this.radians);
 
-		nr = radians + hp;
+		let nr = radians + hp;
 		this.rx = this.cx + hw * Math.cos(nr);
 		this.ry = this.cy + hw * Math.sin(nr);
 
@@ -42,11 +41,11 @@ export class Rectangle {
 		this.lx = this.cx + hw * Math.cos(nr);
 		this.ly = this.cy + hw * Math.sin(nr);
 
-		nr = radians - wr;
+		nr = radians - wa;
 		this.tlx = this.cx + d * Math.cos(nr);
 		this.tly = this.cy + d * Math.sin(nr);
 
-		nr = radians + wr;
+		nr = radians + wa;
 		this.trx = this.cx + d * Math.cos(nr);
 		this.try = this.cy + d * Math.sin(nr);
 
@@ -54,11 +53,11 @@ export class Rectangle {
 		this.bx = this.cx + hh * Math.cos(radians);
 		this.by = this.cy + hh * Math.sin(radians);
 
-		nr = radians - wr;
+		nr = radians - wa;
 		this.brx = this.cx + d * Math.cos(nr);
 		this.bry = this.cy + d * Math.sin(nr);
 
-		nr = radians + wr;
+		nr = radians + wa;
 		this.blx = this.cx + d * Math.cos(nr);
 		this.bly = this.cy + d * Math.sin(nr);
 
@@ -92,10 +91,7 @@ export class Rectangle {
 		const dy = Math.max(0, ymin - y, y - ymax);
 
 		const d = dx * dx + dy * dy;
-		if (d > 0) {
-			return -d;
-		}
-		return Math.min(x - xmin, xmax - x, y - ymin, ymax - y) ** 2;
+		return d > 0 ? -d : Math.min(x - xmin, xmax - x, y - ymin, ymax - y) ** 2;
 	}
 }
 

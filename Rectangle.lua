@@ -48,21 +48,19 @@ end
 ---@param radians number
 ---@return Rectangle
 function Rectangle:setRadians(radians)
+    self.radians = radians - 2 * math.pi * math.floor(radians / (math.pi * 2));
+    self.diagonal = math.sqrt(self.width ^ 2 + self.height ^ 2);
+
     local wa = (math.pi - math.atan(self.height / self.width) * 2) * .5;
-    local nr, d;
     local hw = self.width * .5;
     local hh = self.height * .5;
     local hp = math.pi * .5;
-
-    self.diagonal = math.sqrt(self.width ^ 2 + self.height ^ 2);
-    d = self.diagonal * .5;
-
-    self.radians = radians - 2 * math.pi * R2I(radians / (math.pi * 2));
+    local d = self.diagonal * .5;
 
     self.tx = self.cx + hh * math.cos(self.radians);
     self.ty = self.cy + hh * math.sin(self.radians);
 
-    nr = radians + hp;
+    local nr = radians + hp;
     self.lx = self.cx + hw * math.cos(nr);
     self.ly = self.cy + hw * math.sin(nr);
 
@@ -130,54 +128,49 @@ function Rectangle:translatePolar(distance, radians)
     return self.translateOffset(x - self.cx, y - self.cy);
 end
 
+---rotate
+---@param ox number
+---@param oy number
+---@param radians number
+---@return Rectangle
+function Rectangle:rotate(ox, oy, radians)
+    local cos = math.cos(radians);
+    local sin = math.sin(radians);
 
+    self.cx = self.cx - ox;
+    self.cy = self.cy - oy;
+    local xn = self.cx * cos - self.cy * sin;
+    local yn = self.cx * sin + self.cy * cos;
+    self.cx = xn + self.rx;
+    self.cy = yn + self.ry;
 
---[[
+    return self.setRadians(self.radians + radians);
+end
 
-            method rotate(real ox, real oy, real radians) -> thistype {
-                real cos = math.cos(radians);
-                real sin = math.sin(radians);
-                real xn, yn;
+function Rectangle:distanceXY(x, y)
+    local a = -self.radians;
+    local cos = math.cos(a);
+    local sin = math.sin(a);
+    local hh = self.height * .5;
+    local hw = self.width * .5;
+    local xmin = self.cx - hh;
+    local xmax = self.cx + hh;
+    local ymin = self.cy - hw;
+    local ymax = self.cy + hw;
 
-                cx -= ox;
-                cy -= oy;
-                xn = cx * cos - cy * sin;
-                yn = cx * sin + cy * cos;
-                cx = xn + rx;
-                cy = yn + ry;
+    x = x - self.cx;
+    y = y - self.cy;
+    local xn = x * cos - y * sin;
+    local yn = x * sin + y * cos;
+    x = xn + self.cx;
+    y = yn + self.cy;
 
-                return setRadians(self.radians + radians);
-            }
+    local dx = math.max(0, math.max(xmin - x, x - xmax));
+    local dy = math.max(0, math.max(ymin - y, y - ymax));
 
-            method distanceXY(real x, real y) -> real {
-                real a = 0 - radians;
-                real cos = math.cos(a);
-                real sin = math.sin(a);
-                real xn, yn, dx , dy, d;
-                real hh = height * .5;
-                real hw = width * .5;
-                real xmin = cx - hh;
-                real xmax = cx + hh;
-                real ymin = cy - hw;
-                real ymax = cy + hw;
-
-                x = x - cx;
-                y = y - cy;
-                xn = x * cos - y * sin;
-                yn = x * sin + y * cos;
-                x = xn + cx;
-                y = yn + cy;
-
-                dx = RMaxBJ(0, RMaxBJ(xmin - x, x - xmax));
-                dy = RMaxBJ(0, RMaxBJ(ymin - y, y - ymax));
-
-                d = dx * dx + dy * dy;
-                if (d > 0) {
-                    return 0 - d;
-                }
-                d = RMinBJ(x - xmin, RMinBJ(xmax - x, RMinBJ(y - ymin, ymax - y)));
-                return d * d;
-            }
-        }
-    }
---]]
+    local d = dx * dx + dy * dy;
+    if d > 0 then
+        return -d;
+    end
+    return math.min(x - xmin, xmax - x, y - ymin, ymax - y) ^ 2;
+end
