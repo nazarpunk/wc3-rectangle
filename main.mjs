@@ -1,4 +1,4 @@
-import {Rectangle} from './rectangle.mjs';
+import {Rectangle} from './Rectangle.mjs';
 
 const canvas = document.createElement('canvas');
 document.body.appendChild(canvas);
@@ -37,26 +37,36 @@ const animate = time => {
 	ctx.lineTo(rect.brx, rect.bry);
 	ctx.lineTo(rect.blx, rect.bly);
 	ctx.closePath();
+	ctx.fillStyle = 'rgb(80,0,0)';
+	ctx.fill();
+
 
 	rect.setRadians(rect.radians + Math.PI * .1 * dx);
 	const radius = 50;
-	const d = rect.distanceSquaredXY(mx, my, ctx);
-	const di = rect.distanceSquaredInnerXY(mx, my, ctx);
-
-	ctx.fillStyle = d > radius ? 'rgba(255,0,0,0.6)' : 'rgba(6,245,162,0.6)';
-	ctx.fill();
+	const d = rect.distanceXY(mx, my);
 
 	if (mx + my >= 0) {
 		ctx.beginPath();
 		ctx.arc(mx, my, radius, 0, Math.PI * 2);
-		ctx.fillStyle = di <= radius ? 'rgba(172,20,192,0.62)' : 'rgba(227,218,10,0.62)';
+
+		if (Math.abs(d) <= radius) {
+			ctx.fillStyle = 'rgba(113,217,24,0.62)';
+		} else {
+			ctx.fillStyle = d <= radius ? 'rgba(172,20,192,0.62)' : 'rgba(227,218,10,0.62)';
+		}
+
 		ctx.fill();
 	}
 
 	ctx.fillStyle = '#FFFFFF';
 	ctx.font = `20px Verdana`;
+	ctx.textAlign = 'center';
 
-	ctx.fillText(mx + my < 0 ? 'Наведите курсор/палец на прямоугольник' : `Расстояние до центра окружности: ${d.toFixed(3)} | ${di.toFixed(3)}`, 10, 50);
+	if (mx + my < 0) {
+		ctx.fillText('Наведите курсор/палец на прямоугольник', 10, 50);
+	} else {
+		ctx.fillText(Math.round(d).toString(), mx, my - radius);
+	}
 	ctx.fillText('tl', rect.tlx, rect.tly);
 	ctx.fillText('tr', rect.trx, rect.try);
 	ctx.fillText('bl', rect.blx, rect.bly);

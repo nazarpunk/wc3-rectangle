@@ -5,40 +5,36 @@
             real cx, cy, tx, ty, lx, ly, rx, ry, bx, by;
         
             real tlx, tly, trx, try, blx, bly, brx, bry;
-    
+
             real radians;
-    
+
             real width, height, diagonal;
     
-            static method create(real cx, real cy, real width, real height, real radians) -> Rectangle {
-                return Rectangle.allocate().setData(cx, cy, width, height, radians);
+            static method new(real cx, real cy, real width, real height, real radians) -> thistype {
+                return thistype.allocate().setData(cx, cy, width, height);
             }
 
-            method destroy() {
-                deallocate();
-            }
-			
-			method setData(real cx, real cy, real width, real height, real radians) -> Rectangle {
-				this.cx = cx;
+            method setData(real cx, real cy, real width, real height, real radians) -> thistype {
+                this.cx = cx;
                 this.cy = cy;
-				this.width = width;
+                this.width = width;
                 this.height = height;
                 return setRadians(radians);
-			}
+            }
 
-            method setCenter(real cx, real cy, real radians) -> Rectangle {
+            method setCenter(real cx, real cy, real radians) -> thistype {
                 this.cx = cx;
                 this.cy = cy;
                 return setRadians(radians);
             }
 
-            method setSize(real width, real height, real radians) -> Rectangle {
+            method setSize(real width, real height, real radians) -> thistype {
                 this.width = width;
                 this.height = height;
                 return setRadians(radians);
             }
     
-            method setRadians(real radians) -> Rectangle {
+            method setRadians(real radians) -> thistype {
                 real wa = (bj_PI - Atan(height / width) * 2) * .5;
                 real nr, d;
                 real hw = width * .5;
@@ -47,7 +43,7 @@
 
                 diagonal = SquareRoot(width * width + height * height);
                 d = diagonal * .5;
-				
+
                 this.radians = radians - 2 * bj_PI * R2I(radians / (bj_PI * 2));
                 
                 tx = cx + hh * Cos(this.radians);
@@ -60,68 +56,68 @@
                 nr = radians - hp;
                 rx = cx + hw * Cos(nr);
                 ry = cy + hw * Sin(nr);
-    
+
                 nr = radians - wa;
                 trx = cx + d * Cos(nr);
                 try = cy + d * Sin(nr);
-    
+
                 nr = radians + wa;
                 tlx = cx + d * Cos(nr);
                 tly = cy + d * Sin(nr);
-    
+
                 radians = radians + bj_PI;
                 bx = cx + hh * Cos(radians);
                 by = cy + hh * Sin(radians);
-    
+
                 nr = radians - wa;
                 blx = cx + d * Cos(nr);
                 bly = cy + d * Sin(nr);
-    
+
                 nr = radians + wa;
                 brx = cx + d * Cos(nr);
                 bry = cy + d * Sin(nr);
 
                 return this;
             }
-    
-            method translateOffset(real dx, real dy) -> Rectangle {
-                cx = cx + dx;
-                cy = cy + dy;
-				
-				tx = tx + dx;
-				ty = ty + dy;
-				lx = lx + dx;
-				ly = ly + dy;
-				rx = rx + dx;
-				ry = ry + dy;
-				bx = bx + dx;
-				by = by + dy;
 
-                tlx = tlx + dx;
-                tly = tly + dy;
-                trx = trx + dx;
-                try = try + dy;
-                blx = blx + dx;
-                bly = bly + dy;
-                brx = brx + dx;
-                bry = bry + dy;
-				
+            method translateOffset(real dx, real dy) -> thistype {
+                cx += dx;
+                cy += dy;
+
+                tx += dx;
+                ty += dy;
+                lx += dx;
+                ly += dy;
+                rx += dx;
+                ry += dy;
+                bx += dx;
+                by += dy;
+
+                tlx += dx;
+                tly += dy;
+                trx += dx;
+                try += dy;
+                blx += dx;
+                bly += dy;
+                brx += dx;
+                bry += dy;
+
                 return this;
             }
 
-            method translatePolar(real distance, real radians) -> Rectangle {
+            method translatePolar(real distance, real radians) -> thistype {
                 real x = cx + distance * Cos(radians);
                 real y = cy + distance * Sin(radians);
                 return translateOffset(x - cx, y - cy);
             }
             
-            method rotate(real ox, real oy, real radians) -> Rectangle {
+            method rotate(real ox, real oy, real radians) -> thistype {
                 real cos = Cos(radians);
                 real sin = Sin(radians);
                 real xn, yn;
 
-                cx = cx - ox;
-                cy = cy - oy;
+                cx -= ox;
+                cy -= oy;
                 xn = cx * cos - cy * sin;
                 yn = cx * sin + cy * cos;
                 cx = xn + rx;
@@ -130,28 +126,7 @@
                 return setRadians(this.radians + radians);
             }
 
-            method distanceSquaredXY(real x, real y) -> real {
-                real a = 0 - radians;
-                real cos = Cos(a);
-                real sin = Sin(a);
-                real xn, yn, dx , dy ;
-                real hh = height * .5;
-                real hw = width * .5;
-
-                x = x - cx;
-                y = y - cy;
-                xn = x * cos - y * sin;
-                yn = x * sin + y * cos;
-                x = xn + cx;
-                y = yn + cy;
-
-                dx = RMaxBJ(0, RMaxBJ(cx - hh - x, x - (cx + hh)));
-                dy = RMaxBJ(0, RMaxBJ(cy - hw - y, y - (cy + hw)));
-
-                return dx * dx + dy * dy;
-            }
-
-            method distanceSquaredInnerXY(real x, real y) -> real {
+            method distanceXY(real x, real y) -> real {
                 real a = 0 - radians;
                 real cos = Cos(a);
                 real sin = Sin(a);
