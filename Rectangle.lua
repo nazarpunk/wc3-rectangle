@@ -128,7 +128,6 @@ function Rectangle:translatePolar(distance, radians)
     return self.translateOffset(x - self.cx, y - self.cy);
 end
 
----rotate
 ---@param ox number
 ---@param oy number
 ---@param radians number
@@ -147,6 +146,9 @@ function Rectangle:rotate(ox, oy, radians)
     return self.setRadians(self.radians + radians);
 end
 
+---@param x number
+---@param y number
+---@return Rectangle
 function Rectangle:distanceXY(x, y)
     local a = -self.radians;
     local cos = math.cos(a);
