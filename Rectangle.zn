@@ -11,7 +11,7 @@
             real width, height, diagonal;
     
             static method new(real cx, real cy, real width, real height, real radians) -> thistype {
-                return thistype.allocate().setData(cx, cy, width, height);
+                return thistype.allocate().setData(cx, cy, width, height, radians);
             }
 
             method setData(real cx, real cy, real width, real height, real radians) -> thistype {
