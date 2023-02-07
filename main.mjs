@@ -9,17 +9,24 @@ const rect = new Rectangle(220, 280, 350, 150, Math.PI * .25);
 
 let mx = -1, my = -1;
 
-window.addEventListener('mousemove', e => {
+let radius = 50;
+
+addEventListener('mousemove', e => {
 	mx = e.clientX;
 	my = e.clientY;
 });
 
-window.addEventListener('touchmove', e => {
+addEventListener('touchmove', e => {
 	if (e.touches.length === 1) {
 		mx = e.touches[0].clientX;
 		my = e.touches[0].clientY;
 	}
 });
+
+addEventListener('wheel', e => {
+	radius = Math.max(10, radius + e.deltaY * 0.05);
+});
+
 
 let prev;
 
@@ -42,17 +49,24 @@ const animate = time => {
 
 
 	rect.setRadians(rect.radians + Math.PI * .1 * dx);
-	const radius = 50;
 	const d = rect.distanceXY(mx, my);
 
+	let s = '';
 	if (mx + my >= 0) {
 		ctx.beginPath();
 		ctx.arc(mx, my, radius, 0, Math.PI * 2);
 
-		if (Math.abs(d) <= radius) {
+		const rq = radius ** 2;
+
+		if (Math.abs(d) <= rq) {
+			s = 'intersect';
 			ctx.fillStyle = 'rgba(113,217,24,0.62)';
+		} else if (d <= rq) {
+			s = 'outer';
+			ctx.fillStyle = 'rgba(172,20,192,0.62)';
 		} else {
-			ctx.fillStyle = d <= radius ? 'rgba(172,20,192,0.62)' : 'rgba(227,218,10,0.62)';
+			s = 'inner';
+			ctx.fillStyle = 'rgba(227,218,10,0.62)'
 		}
 
 		ctx.fill();
@@ -65,7 +79,7 @@ const animate = time => {
 	if (mx + my < 0) {
 		ctx.fillText('Наведите курсор/палец на прямоугольник', 10, 50);
 	} else {
-		ctx.fillText(Math.round(d).toString(), mx, my - radius);
+		ctx.fillText(s, mx, my - radius);
 	}
 	ctx.fillText('tl', rect.tlx, rect.tly);
 	ctx.fillText('tr', rect.trx, rect.try);

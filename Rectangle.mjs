@@ -1,31 +1,4 @@
 export class Rectangle {
-	cx = 0;
-	cy = 0;
-
-	tx = 0;
-	ty = 0;
-	lx = 0;
-	ly = 0;
-	rx = 0;
-	ry = 0;
-	bx = 0;
-	by = 0;
-
-	tlx = 0;
-	tly = 0;
-	trx = 0;
-	try = 0;
-	blx = 0;
-	bly = 0;
-	brx = 0;
-	bry = 0;
-
-	radians = 0;
-
-	width = 0;
-	height = 0;
-
-	diagonal = 0;
 
 	/**
 	 * @param {number} cx
@@ -118,12 +91,11 @@ export class Rectangle {
 		const dx = Math.max(0, xmin - x, x - xmax);
 		const dy = Math.max(0, ymin - y, y - ymax);
 
-		let d = Math.sqrt(dx * dx + dy * dy);
+		const d = dx * dx + dy * dy;
 		if (d > 0) {
 			return -d;
 		}
-		d = Math.min(x - xmin, Math.min(xmax - x, Math.min(y - ymin, ymax - y)));
-		return d;
+		return Math.min(x - xmin, xmax - x, y - ymin, ymax - y) ** 2;
 	}
 }
 
